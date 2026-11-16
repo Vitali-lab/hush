@@ -88,6 +88,7 @@ final class AppModel: ObservableObject {
         Log.info("Starting Hush; model installed: \(ModelCatalog.isInstalled(settings.modelID))")
         isAccessibilityGranted = Permissions.isAccessibilityGranted
         isMicrophoneGranted = Permissions.isMicrophoneGranted
+        Log.info("Accessibility: \(isAccessibilityGranted), microphone: \(isMicrophoneGranted)")
 
         hotkeys.binding = settings.hotkey
         hotkeys.isListening = { [weak self] in self?.phase == .listening }

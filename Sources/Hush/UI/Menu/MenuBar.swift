@@ -158,6 +158,7 @@ struct MenuPopoverView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
+            if !model.isAccessibilityGranted { permissionWarning }
             if !installed { modelWarning }
             transcriptCard
             statsRow
@@ -235,6 +236,38 @@ struct MenuPopoverView: View {
         }
         .padding(2)
         .background(Capsule().fill(Color.primary.opacity(0.05)))
+    }
+
+    private var permissionWarning: some View {
+        Button {
+            model.requestAccessibility()
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "hand.raised.fill")
+                    .foregroundStyle(Theme.amber)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(t("Accessibility is off", "Нет доступа Accessibility"))
+                        .font(.system(size: 11.5, weight: .semibold))
+                    Text(t("The shortcut cannot fire without it", "Без него хоткей не сработает"))
+                        .font(.system(size: 10))
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(9)
+            .background(
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(Theme.amber.opacity(0.10))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .strokeBorder(Theme.amber.opacity(0.28), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private var modelWarning: some View {

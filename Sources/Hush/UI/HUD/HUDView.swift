@@ -18,9 +18,10 @@ final class HUDPanel: NSPanel {
         hasShadow = false
         level = .statusBar
         ignoresMouseEvents = true
-        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
+        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .ignoresCycle]
         isMovableByWindowBackground = false
         hidesOnDeactivate = false
+        canHide = false
         animationBehavior = .none
     }
 }
@@ -30,7 +31,7 @@ final class HUDController {
     private let panel: HUDPanel
     private let model: AppModel
     private var cancellables: Set<AnyCancellable> = []
-    private var isVisible = false
+    private var watchdog: Timer?
 
     init(model: AppModel) {
         self.model = model
@@ -39,9 +40,9 @@ final class HUDController {
 
         model.$phase
             .removeDuplicates()
-            .receive(on: RunLoop.main)
             .sink { [weak self] phase in
                 guard let self else { return }
+                Log.info("HUD phase: \(phase)")
                 if case .idle = phase {
                     self.hide()
                 } else {
@@ -49,38 +50,41 @@ final class HUDController {
                 }
             }
             .store(in: &cancellables)
-    }
 
-    private func show() {
-        guard let screen = NSScreen.main else { return }
-        let size = panel.frame.size
-        let x = screen.visibleFrame.midX - size.width / 2
-        let y = screen.visibleFrame.minY + 34
-        panel.setFrameOrigin(NSPoint(x: x, y: y))
-
-        if !isVisible {
-            isVisible = true
-            panel.alphaValue = 0
-            panel.orderFrontRegardless()
-            NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.16
-                context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                panel.animator().alphaValue = 1
+        // Safety net: if the window server or a space switch drops the panel
+        // while a dictation is still running, bring it back.
+        watchdog = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self, self.model.phase.isActive, !self.panel.isVisible else { return }
+                self.show()
             }
         }
     }
 
+    private func show() {
+        // If the app was hidden with Cmd+H the panel would stay hidden too.
+        if NSApp.isHidden {
+            NSApp.unhide(nil)
+        }
+
+        guard let screen = screenUnderMouse() else { return }
+        let size = panel.frame.size
+        let x = screen.visibleFrame.midX - size.width / 2
+        let y = screen.visibleFrame.minY + 34
+        panel.setFrameOrigin(NSPoint(x: x, y: y))
+        panel.alphaValue = 1
+        panel.orderFrontRegardless()
+    }
+
     private func hide() {
-        guard isVisible else { return }
-        isVisible = false
-        NSAnimationContext.runAnimationGroup({ context in
-            context.duration = 0.14
-            context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            panel.animator().alphaValue = 0
-        }, completionHandler: { [weak self] in
-            guard let self, !self.isVisible else { return }
-            self.panel.orderOut(nil)
-        })
+        // No alpha animation here: a fast stop/start used to leave the panel
+        // half-faded and flagged as visible, so it never came back.
+        panel.orderOut(nil)
+    }
+
+    private func screenUnderMouse() -> NSScreen? {
+        let point = NSEvent.mouseLocation
+        return NSScreen.screens.first { $0.frame.contains(point) } ?? NSScreen.main
     }
 }
 
