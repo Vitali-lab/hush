@@ -43,20 +43,34 @@ enum UIPreview {
             in: directory
         )
 
+        model.settings.theme = .system
+        render(SettingsRootView(model: model, initialTab: .model), size: settingsSize, name: "settings-model-ru", in: directory)
+        render(SettingsRootView(model: model, initialTab: .dictionary), size: settingsSize, name: "settings-words-ru", in: directory)
+        render(SettingsRootView(model: model, initialTab: .about), size: settingsSize, name: "settings-about-ru", in: directory)
+
         model.settings = original
         model.settings.theme = .system
         model.settings.language = .en
         model.setPhaseForPreview(.listening, levels: sampleLevels())
-        render(HUDView(model: model), size: CGSize(width: 296, height: 88), name: "hud-listening", in: directory)
+        render(HUDView(model: model), size: CGSize(width: 192, height: 70), name: "hud-listening", in: directory)
 
+        model.settings.theme = .midnight
+        render(
+            HUDView(model: model).environment(\.colorScheme, .dark),
+            size: CGSize(width: 192, height: 70),
+            name: "hud-listening-dark",
+            in: directory
+        )
+
+        model.settings.theme = .system
         model.setPhaseForPreview(.transcribing)
-        render(HUDView(model: model), size: CGSize(width: 296, height: 88), name: "hud-transcribing", in: directory)
+        render(HUDView(model: model), size: CGSize(width: 192, height: 70), name: "hud-transcribing", in: directory)
 
-        model.setPhaseForPreview(.done("Привет, это тест локальной диктовки на Mac."))
-        render(HUDView(model: model), size: CGSize(width: 296, height: 88), name: "hud-done", in: directory)
+        model.setPhaseForPreview(.done(""))
+        render(HUDView(model: model), size: CGSize(width: 192, height: 70), name: "hud-done", in: directory)
 
         model.setPhaseForPreview(.idle)
-        render(MenuPopoverView(model: model, onSettings: {}, onQuit: {}), size: CGSize(width: 324, height: 330), name: "menu", in: directory)
+        render(MenuPopoverView(model: model, onToggle: {}, onSettings: {}, onQuit: {}), size: CGSize(width: 324, height: 330), name: "menu", in: directory)
 
         print("Rendered previews to \(directory.path)")
     }

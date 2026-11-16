@@ -112,11 +112,9 @@ enum TextProcessor {
         if let regex = try? NSRegularExpression(pattern: pattern) {
             let matches = regex.matches(in: result, range: NSRange(result.startIndex..., in: result))
             for match in matches.reversed() {
-                guard let prefixRange = Range(match.range(at: 1), in: result),
-                      let letterRange = Range(match.range(at: 2), in: result) else { continue }
+                guard let letterRange = Range(match.range(at: 2), in: result) else { continue }
                 let letter = result[letterRange]
                 result.replaceSubrange(letterRange, with: letter.uppercased())
-                _ = prefixRange
             }
         }
         return result

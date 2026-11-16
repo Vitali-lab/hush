@@ -84,7 +84,10 @@ struct AboutView: View {
                 Text(t("Shortcuts", "Горячие клавиши"))
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
 
-                shortcutRow(t("Start / stop dictation", "Старт / стоп диктовки"), t("Hold Fn", "Удерживай Fn"))
+                shortcutRow(
+                    t("Start / stop dictation", "Старт / стоп диктовки"),
+                    model.settings.hotkey.display(model.settings.language)
+                )
                 shortcutRow(t("Cancel while recording", "Отмена во время записи"), "Esc")
                 shortcutRow(t("Open settings", "Открыть настройки"), "⌘ ,")
                 shortcutRow(t("Quit", "Выход"), "⌘ Q")

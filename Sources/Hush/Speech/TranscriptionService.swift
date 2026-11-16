@@ -19,39 +19,67 @@ final class TranscriptionService {
 
     private var pipe: WhisperKit?
     private var loadedModelID: String?
+    private var loadTask: Task<Void, Error>?
 
     var isLoaded: Bool { pipe != nil }
 
     func loadModel(_ id: String) async throws {
         if loadedModelID == id, pipe != nil { return }
 
+        // A prewarm and the first hotkey press can race; both should wait for
+        // the same WhisperKit instance instead of compiling two models.
+        if let loadTask {
+            try await loadTask.value
+            if loadedModelID == id, pipe != nil { return }
+        }
+
         guard let folder = ModelCatalog.modelFolder(for: id) else {
             throw ServiceError.modelMissing
         }
 
-        if pipe != nil {
-            unload()
+        let task = Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            if let oldPipe = self.pipe {
+                self.pipe = nil
+                self.loadedModelID = nil
+                Task { await oldPipe.unloadModels() }
+            }
+
+            let config = WhisperKitConfig(
+                model: id,
+                downloadBase: AppPaths.models,
+                modelFolder: folder.path,
+                verbose: false,
+                logLevel: .none,
+                prewarm: true,
+                load: true,
+                download: false
+            )
+
+            let started = CFAbsoluteTimeGetCurrent()
+            let newPipe = try await WhisperKit(config)
+            try Task.checkCancellation()
+
+            self.pipe = newPipe
+            self.loadedModelID = id
+            let elapsed = CFAbsoluteTimeGetCurrent() - started
+            Log.info("Model \(id) loaded in \(String(format: "%.2f", elapsed))s")
         }
 
-        let config = WhisperKitConfig(
-            model: id,
-            downloadBase: AppPaths.models,
-            modelFolder: folder.path,
-            verbose: false,
-            logLevel: .none,
-            prewarm: true,
-            load: true,
-            download: false
-        )
-
-        let started = CFAbsoluteTimeGetCurrent()
-        pipe = try await WhisperKit(config)
-        loadedModelID = id
-        let elapsed = CFAbsoluteTimeGetCurrent() - started
-        Log.info("Model \(id) loaded in \(String(format: "%.2f", elapsed))s")
+        loadTask = task
+        do {
+            try await task.value
+            loadTask = nil
+        } catch {
+            loadTask = nil
+            throw error
+        }
     }
 
     func unload() {
+        loadTask?.cancel()
+        loadTask = nil
         let oldPipe = pipe
         pipe = nil
         loadedModelID = nil

@@ -34,12 +34,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             .store(in: &cancellables)
 
+        let isCaptureMenu = CommandLine.arguments.contains("--capture-menu")
         let isFreshInstall = !model.settings.hasCompletedSetup
         let hasModel = ModelCatalog.isInstalled(model.settings.modelID)
         let needsPermissions = !model.isMicrophoneGranted || !model.isAccessibilityGranted
-        if isFreshInstall || !hasModel || needsPermissions {
+        if !isCaptureMenu, isFreshInstall || !hasModel || needsPermissions {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
                 self?.openSettings()
+            }
+        }
+
+        if let flagIndex = CommandLine.arguments.firstIndex(of: "--capture-menu"),
+           CommandLine.arguments.count > flagIndex + 1 {
+            let directory = CommandLine.arguments[flagIndex + 1]
+            model.setModelStateForPreview(.ready)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+                self?.menuBar?.showPopoverForPreview()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                WindowCapture.captureAllWindows(to: directory)
+                NSApp.terminate(nil)
             }
         }
 
@@ -112,6 +126,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         editMenu.addItem(withTitle: t("Select All", "Выбрать всё"), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
         editMenuItem.submenu = editMenu
         mainMenu.addItem(editMenuItem)
+
+        let windowMenuItem = NSMenuItem()
+        let windowMenu = NSMenu(title: t("Window", "Окно"))
+        windowMenu.addItem(
+            withTitle: t("Close", "Закрыть"),
+            action: #selector(NSWindow.performClose(_:)),
+            keyEquivalent: "w"
+        )
+        windowMenu.addItem(
+            withTitle: t("Minimize", "Свернуть"),
+            action: #selector(NSWindow.performMiniaturize(_:)),
+            keyEquivalent: "m"
+        )
+        windowMenuItem.submenu = windowMenu
+        mainMenu.addItem(windowMenuItem)
 
         NSApp.mainMenu = mainMenu
     }

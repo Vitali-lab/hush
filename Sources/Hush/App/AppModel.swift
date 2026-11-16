@@ -153,7 +153,7 @@ final class AppModel: ObservableObject {
     }
 
     func beginDictation() {
-        guard phase == .idle, !isStarting else { return }
+        guard !phase.isActive, !isStarting else { return }
 
         guard ModelCatalog.isInstalled(settings.modelID) else {
             flashError(t("Download a model first", "Сначала скачай модель"))
@@ -190,7 +190,7 @@ final class AppModel: ObservableObject {
         startLevelTimer()
 
         Task {
-            await ensureModelLoaded()
+            try? await ensureModelLoaded()
         }
     }
 
@@ -203,6 +203,7 @@ final class AppModel: ObservableObject {
         let appName = NSWorkspace.shared.frontmostApplication?.localizedName
 
         guard samples.count > 3_200 else {
+            recordingStartedAt = nil
             phase = .failed(t("Too short", "Слишком коротко"))
             scheduleIdle(after: 1.2)
             return
@@ -213,7 +214,7 @@ final class AppModel: ObservableObject {
 
         Task {
             do {
-                await ensureModelLoaded()
+                try await ensureModelLoaded()
                 let raw = try await transcription.transcribe(
                     samples: samples,
                     language: settings.language.whisperCode
@@ -250,11 +251,13 @@ final class AppModel: ObservableObject {
         guard phase == .listening else { return }
         stopLevelTimer()
         recorder.cancel()
+        recordingStartedAt = nil
         phase = .idle
         elapsed = 0
+        scheduleIdleUnload()
     }
 
-    private func ensureModelLoaded() async {
+    private func ensureModelLoaded() async throws {
         let id = settings.modelID
         if loadedModelID == id, transcription.isLoaded { return }
 
@@ -266,6 +269,7 @@ final class AppModel: ObservableObject {
         } catch {
             Log.error("Model load failed: \(error.localizedDescription)")
             modelState = .failed(error.localizedDescription)
+            throw error
         }
     }
 
@@ -277,6 +281,7 @@ final class AppModel: ObservableObject {
             loadedModelID = settings.modelID
             modelState = .ready
             Log.info("Model prewarmed")
+            scheduleIdleUnload()
         } catch {
             modelState = .failed(error.localizedDescription)
         }
@@ -384,7 +389,7 @@ final class AppModel: ObservableObject {
                     refreshModelState()
                     settings.modelID = spec.id
                     modelDiskUsage = ModelCatalog.diskUsage()
-                    await ensureModelLoaded()
+                    try? await ensureModelLoaded()
                 } catch {
                     Log.error("Download failed: \(error.localizedDescription)")
                     downloadState = .failed(error.localizedDescription)
@@ -401,7 +406,7 @@ final class AppModel: ObservableObject {
         transcription.unload()
         refreshModelState()
         if ModelCatalog.isInstalled(spec.id) {
-            Task { await ensureModelLoaded() }
+            Task { try? await ensureModelLoaded() }
         }
     }
 

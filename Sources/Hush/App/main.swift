@@ -22,6 +22,18 @@ if let flagIndex = CommandLine.arguments.firstIndex(of: "--transcribe"),
 }
 
 MainActor.assumeIsolated {
+    let devFlags = ["--render-ui", "--capture-ui", "--capture-menu"]
+    if !devFlags.contains(where: CommandLine.arguments.contains),
+       let bundleID = Bundle.main.bundleIdentifier {
+        let currentPID = ProcessInfo.processInfo.processIdentifier
+        if let other = NSRunningApplication
+            .runningApplications(withBundleIdentifier: bundleID)
+            .first(where: { $0.processIdentifier != currentPID }) {
+            other.activate(options: [.activateIgnoringOtherApps])
+            exit(0)
+        }
+    }
+
     let application = NSApplication.shared
     let appDelegate = AppDelegate()
     application.delegate = appDelegate

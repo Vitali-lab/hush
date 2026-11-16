@@ -130,6 +130,8 @@ Hush copies the text to the clipboard instead and says so in the pill.
   (and the “Press 🌐 key” shortcut), or pick another shortcut in Hush.
 - **Nothing is pasted?** Check that Accessibility is on; Hush falls back to the
   clipboard and shows “Copied”.
+- **Still nothing?** Also enable Input Monitoring for Hush in System Settings →
+  Privacy & Security → Input Monitoring, then relaunch the app.
 
 ## Languages and themes
 

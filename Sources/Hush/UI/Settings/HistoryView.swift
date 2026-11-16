@@ -4,6 +4,7 @@ struct HistoryView: View {
     @ObservedObject var model: AppModel
     @State private var query = ""
     @State private var copiedID: UUID?
+    @State private var confirmClear = false
 
     private var t: Loc { Loc(model.settings.language) }
 
@@ -65,7 +66,7 @@ struct HistoryView: View {
 
                 if !model.history.isEmpty {
                     Button {
-                        model.clearHistory()
+                        confirmClear = true
                     } label: {
                         Text(t("Clear history", "Очистить историю"))
                             .font(.system(size: 11.5, weight: .medium))
@@ -73,6 +74,20 @@ struct HistoryView: View {
                     }
                     .buttonStyle(.plain)
                     .padding(.leading, 2)
+                    .alert(
+                        t("Clear history?", "Очистить историю?"),
+                        isPresented: $confirmClear
+                    ) {
+                        Button(t("Cancel", "Отмена"), role: .cancel) {}
+                        Button(t("Clear", "Очистить"), role: .destructive) {
+                            model.clearHistory()
+                        }
+                    } message: {
+                        Text(t(
+                            "This removes every saved dictation on this Mac.",
+                            "Это удалит все сохранённые диктовки на этом Mac."
+                        ))
+                    }
                 }
             }
         }
@@ -170,6 +185,10 @@ private struct HistoryRow: View {
 
     private var t: Loc { Loc(lang) }
 
+    private func durationLabel(_ value: Double) -> String {
+        lang == .ru ? String(format: "%.0f с", value) : String(format: "%.0fs", value)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             Text(entry.text)
@@ -188,7 +207,7 @@ private struct HistoryRow: View {
                 }
                 if entry.duration > 0.5 {
                     Text("·")
-                    Text(String(format: "%.0fs", entry.duration))
+                    Text(durationLabel(entry.duration))
                         .font(.system(size: 10.5))
                 }
                 Spacer()

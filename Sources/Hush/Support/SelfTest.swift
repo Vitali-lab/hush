@@ -53,6 +53,35 @@ enum SelfTest {
         check(HotkeyBinding(keyCode: 2, character: "d").isValid, "plain letter allowed")
         check(HotkeyBinding(keyCode: 96).isValid, "function key allowed")
 
+        check(HotkeyBinding.fnHold.matches(keyCode: 63, flags: .function), "Fn matches")
+        check(
+            !HotkeyBinding.fnHold.matches(keyCode: 63, flags: [.function, .shift]),
+            "Fn plus shift does not match"
+        )
+        check(
+            HotkeyBinding.controlOptionSpace.matches(keyCode: 49, flags: [.control, .option, .capsLock]),
+            "caps lock is ignored"
+        )
+        check(
+            HotkeyBinding(keyCode: 2, modifiers: [.command, .shift]).matches(keyCode: 2, flags: [.command, .shift, .capsLock]),
+            "custom combo matches"
+        )
+        check(
+            !HotkeyBinding(keyCode: 2, modifiers: [.command]).matches(keyCode: 2, flags: [.option]),
+            "wrong modifier does not match"
+        )
+
+        var roundTrip = AppSettings()
+        roundTrip.language = .en
+        roundTrip.theme = .sand
+        roundTrip.hotkey = HotkeyBinding(keyCode: 49, modifiers: [.control, .option], mode: .toggle, character: " ")
+        if let data = try? JSONEncoder().encode(roundTrip),
+           let decoded = try? JSONDecoder().decode(AppSettings.self, from: data) {
+            check(decoded == roundTrip, "settings round-trip")
+        } else {
+            check(false, "settings round-trip")
+        }
+
         print(failures == 0 ? "All checks passed." : "\(failures) check(s) failed.")
         exit(failures == 0 ? 0 : 1)
     }

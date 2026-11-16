@@ -84,6 +84,15 @@ enum ModelCatalog {
     }
 
     static func modelFolder(for id: String) -> URL? {
+        // Fast path for the Hub layout used by WhisperKit.
+        let direct = AppPaths.models
+            .appendingPathComponent("models/argmaxinc/whisperkit-coreml/openai_whisper-\(id)")
+        if FileManager.default.fileExists(
+            atPath: direct.appendingPathComponent("AudioEncoder.mlmodelc").path
+        ) {
+            return direct
+        }
+
         let fm = FileManager.default
         guard let enumerator = fm.enumerator(
             at: AppPaths.models,

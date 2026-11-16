@@ -10,6 +10,7 @@ final class MenuBarController: NSObject, NSPopoverDelegate {
     private let onSettings: () -> Void
     private let onQuit: () -> Void
     private var cancellables: Set<AnyCancellable> = []
+    private var previousApp: NSRunningApplication?
 
     init(model: AppModel, onSettings: @escaping () -> Void, onQuit: @escaping () -> Void) {
         self.model = model
@@ -35,6 +36,7 @@ final class MenuBarController: NSObject, NSPopoverDelegate {
         let hosting = NSHostingController(
             rootView: MenuPopoverView(
                 model: model,
+                onToggle: { [weak self] in self?.startFromPopover() },
                 onSettings: onSettings,
                 onQuit: onQuit
             )
@@ -86,8 +88,28 @@ final class MenuBarController: NSObject, NSPopoverDelegate {
         if popover.isShown {
             popover.performClose(nil)
         } else if let button = statusItem.button {
+            previousApp = NSWorkspace.shared.frontmostApplication
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
             popover.contentViewController?.view.window?.makeKey()
+        }
+    }
+
+    func showPopoverForPreview() {
+        guard let button = statusItem.button else { return }
+        previousApp = NSWorkspace.shared.frontmostApplication
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        popover.contentViewController?.view.window?.makeKey()
+    }
+
+    private func startFromPopover() {
+        popover.performClose(nil)
+
+        if let previousApp, previousApp.bundleIdentifier != Bundle.main.bundleIdentifier {
+            previousApp.activate(options: [.activateIgnoringOtherApps])
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
+            self?.model.toggleDictation()
         }
     }
 
@@ -121,6 +143,7 @@ final class MenuBarController: NSObject, NSPopoverDelegate {
 
 struct MenuPopoverView: View {
     @ObservedObject var model: AppModel
+    let onToggle: () -> Void
     let onSettings: () -> Void
     let onQuit: () -> Void
 
@@ -181,13 +204,7 @@ struct MenuPopoverView: View {
 
             Spacer()
 
-            if case .listening = model.phase {
-                Text(timeString(model.elapsed))
-                    .font(.system(size: 11, weight: .medium, design: .rounded).monospacedDigit())
-                    .foregroundStyle(Theme.pink)
-            } else {
-                languageSwitch
-            }
+            languageSwitch
         }
     }
 
@@ -327,9 +344,7 @@ struct MenuPopoverView: View {
 
     private var actions: some View {
         HStack(spacing: 8) {
-            Button {
-                model.toggleDictation()
-            } label: {
+            Button(action: onToggle) {
                 HStack(spacing: 6) {
                     Image(systemName: isListening ? "stop.fill" : "mic.fill")
                     Text(isListening
@@ -391,8 +406,4 @@ struct MenuPopoverView: View {
         }
     }
 
-    private func timeString(_ interval: Double) -> String {
-        let seconds = Int(interval.rounded())
-        return String(format: "%d:%02d", seconds / 60, seconds % 60)
-    }
 }

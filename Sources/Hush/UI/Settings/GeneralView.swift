@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 struct GeneralView: View {
@@ -271,6 +272,8 @@ private struct ShortcutCard: View {
                     Text(isRecording ? t("Press keys…", "Нажми клавиши…") : model.settings.hotkey.display(model.settings.language))
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .foregroundStyle(isRecording ? Theme.accent : .primary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
                     Spacer(minLength: 0)
                 }
                 .padding(.horizontal, 12)
@@ -392,6 +395,9 @@ private struct ShortcutCard: View {
             }
         }
         .onDisappear { stopRecording() }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in
+            if isRecording { stopRecording() }
+        }
     }
 
     private func beginRecording() {
