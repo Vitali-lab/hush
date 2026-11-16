@@ -51,8 +51,11 @@ struct HotkeyBinding: Codable, Equatable, Hashable {
     }
 
     var isValid: Bool {
-        if isFunctionKey || isModifierOnly { return true }
-        return !modifierFlags.intersection([.command, .option, .control, .shift]).isEmpty
+        keyCode != 53
+    }
+
+    var needsModifierWarning: Bool {
+        !isModifierOnly && !isFunctionKey && modifierFlags.intersection([.command, .option, .control, .shift]).isEmpty
     }
 
     // MARK: - Matching
@@ -173,7 +176,7 @@ struct HotkeyBinding: Codable, Equatable, Hashable {
     // MARK: - Key tables
 
     static func isModifierKey(_ keyCode: UInt16) -> Bool {
-        modifierKeyCodes.contains(keyCode)
+        keyCode != 57 && modifierKeyCodes.contains(keyCode)
     }
 
     private static let modifierKeyCodes: Set<UInt16> = [54, 55, 56, 57, 58, 59, 60, 61, 62, 63]

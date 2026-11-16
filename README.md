@@ -115,9 +115,9 @@ The shortcut is fully configurable in **Settings → General → Shortcut**:
 2. Press any key combination, or a single Fn / F1–F20 / modifier key.
 3. Choose **Hold** (press and hold) or **Press to toggle** (hands-free).
 
-Plain letters and digits need a modifier (⌘, ⌥, ⌃, ⇧) so they do not fire while
-you type. Function keys and Fn can stand alone. Presets: `Fn`, `Right ⌥`,
-`Fn ×2`, `⌃⌥Space`.
+Any key works. A plain letter will also fire while you type, so a modifier
+(⌘, ⌥, ⌃, ⇧) or an F-key is safer. Function keys, Fn, and modifiers can stand
+alone. Presets: `Fn`, `Right ⌥`, `Fn ×2`, `⌃⌥Space`.
 
 After release the text is pasted at the cursor. If Accessibility is missing,
 Hush copies the text to the clipboard instead and says so in the pill.

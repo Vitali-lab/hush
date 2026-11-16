@@ -356,10 +356,22 @@ private struct ShortcutCard: View {
                 Text(errorText)
                     .font(.system(size: 10.5))
                     .foregroundStyle(Theme.danger)
+            } else if model.settings.hotkey.needsModifierWarning {
+                HStack(spacing: 6) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.system(size: 10))
+                    Text(t(
+                        "A single key will also fire while you type. A modifier or an F-key is safer.",
+                        "Одна клавиша будет срабатывать и во время набора. Модификатор или F-клавиша надёжнее."
+                    ))
+                        .font(.system(size: 10.5))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .foregroundStyle(Theme.amber)
             } else {
                 Text(t(
-                    "Letters need ⌘, ⌥, ⌃ or ⇧. Function keys and Fn can stand alone.",
-                    "Буквам нужен ⌘, ⌥, ⌃ или ⇧. F-клавиши и Fn могут работать сами по себе."
+                    "Any key works. Modifiers, F-keys, and Fn can stand alone.",
+                    "Работает любая клавиша. Модификаторы, F-клавиши и Fn могут быть сами по себе."
                 ))
                     .font(.system(size: 10.5))
                     .foregroundStyle(.secondary)
@@ -428,6 +440,19 @@ private struct ShortcutCard: View {
 
         let keyCode = event.keyCode
         let flags = event.modifierFlags
+
+        // Only capture the press, not the release, otherwise a quick tap would
+        // store an empty modifier mask and show the wrong symbol.
+        let isDown: Bool
+        switch keyCode {
+        case 63: isDown = flags.contains(.function)
+        case 54, 55: isDown = flags.contains(.command)
+        case 58, 61: isDown = flags.contains(.option)
+        case 59, 62: isDown = flags.contains(.control)
+        case 56, 60: isDown = flags.contains(.shift)
+        default: isDown = false
+        }
+        guard isDown else { return }
         let work = DispatchWorkItem { [self] in
             let binding = HotkeyBinding(
                 keyCode: keyCode,

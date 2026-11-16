@@ -50,7 +50,7 @@ enum SelfTest {
             HotkeyBinding(keyCode: 2, modifiers: [.command, .shift], character: "d").display(.en) == "⇧⌘D",
             "custom combo display"
         )
-        check(!HotkeyBinding(keyCode: 2, character: "d").isValid, "plain letter rejected")
+        check(HotkeyBinding(keyCode: 2, character: "d").isValid, "plain letter allowed")
         check(HotkeyBinding(keyCode: 96).isValid, "function key allowed")
 
         print(failures == 0 ? "All checks passed." : "\(failures) check(s) failed.")
