@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-WORK="$(mktemp -d "${TMPDIR:-/tmp}/sotto-icon.XXXXXX")"
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/hush-icon.XXXXXX")"
 ICONSET="$WORK/AppIcon.iconset"
 mkdir -p "$ICONSET"
 

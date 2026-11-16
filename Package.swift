@@ -2,21 +2,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "Sotto",
+    name: "Hush",
     platforms: [.macOS(.v14)],
     products: [
-        .executable(name: "Sotto", targets: ["Sotto"])
+        .executable(name: "Hush", targets: ["Hush"])
     ],
     dependencies: [
         .package(url: "https://github.com/argmaxinc/argmax-oss-swift.git", from: "0.9.0")
     ],
     targets: [
         .executableTarget(
-            name: "Sotto",
+            name: "Hush",
             dependencies: [
                 .product(name: "WhisperKit", package: "argmax-oss-swift")
             ],
-            path: "Sources/Sotto",
+            path: "Sources/Hush",
             swiftSettings: [
                 .swiftLanguageMode(.v5)
             ]
