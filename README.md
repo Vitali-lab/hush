@@ -47,6 +47,10 @@ Then drag `dist/Sotto.app` into `/Applications` if you want to keep it around.
 The build script signs with the first available `Apple Development` identity,
 or ad-hoc if there is none.
 
+> The app is not notarized. If you copy the built `.app` to another Mac,
+> either build it there or clear the quarantine flag:
+> `xattr -dr com.apple.quarantine /Applications/Sotto.app`.
+
 On first launch Sotto asks for:
 
 1. **Microphone** — to hear you.
