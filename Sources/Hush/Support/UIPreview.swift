@@ -52,22 +52,22 @@ enum UIPreview {
         model.settings.theme = .system
         model.settings.language = .en
         model.setPhaseForPreview(.listening, levels: sampleLevels())
-        render(HUDView(model: model), size: CGSize(width: 192, height: 70), name: "hud-listening", in: directory)
+        render(HUDView(model: model), size: CGSize(width: 144, height: 56), name: "hud-listening", in: directory)
 
         model.settings.theme = .midnight
         render(
             HUDView(model: model).environment(\.colorScheme, .dark),
-            size: CGSize(width: 192, height: 70),
+            size: CGSize(width: 144, height: 56),
             name: "hud-listening-dark",
             in: directory
         )
 
         model.settings.theme = .system
         model.setPhaseForPreview(.transcribing)
-        render(HUDView(model: model), size: CGSize(width: 192, height: 70), name: "hud-transcribing", in: directory)
+        render(HUDView(model: model), size: CGSize(width: 144, height: 56), name: "hud-transcribing", in: directory)
 
         model.setPhaseForPreview(.done(""))
-        render(HUDView(model: model), size: CGSize(width: 192, height: 70), name: "hud-done", in: directory)
+        render(HUDView(model: model), size: CGSize(width: 144, height: 56), name: "hud-done", in: directory)
 
         model.setPhaseForPreview(.idle)
         render(MenuPopoverView(model: model, onToggle: {}, onSettings: {}, onQuit: {}), size: CGSize(width: 324, height: 330), name: "menu", in: directory)

@@ -8,7 +8,7 @@ final class HUDPanel: NSPanel {
 
     init() {
         super.init(
-            contentRect: NSRect(x: 0, y: 0, width: 192, height: 70),
+            contentRect: NSRect(x: 0, y: 0, width: 144, height: 56),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -55,7 +55,7 @@ final class HUDController {
         guard let screen = NSScreen.main else { return }
         let size = panel.frame.size
         let x = screen.visibleFrame.midX - size.width / 2
-        let y = screen.visibleFrame.minY + 40
+        let y = screen.visibleFrame.minY + 34
         panel.setFrameOrigin(NSPoint(x: x, y: y))
 
         if !isVisible {
@@ -106,25 +106,25 @@ struct HUDView: View {
             Group {
                 switch model.phase {
                 case .listening:
-                    Waveform(levels: Array(model.levels.suffix(30)))
-                        .frame(width: 122, height: 24)
+                    Waveform(levels: Array(model.levels.suffix(24)))
+                        .frame(width: 92, height: 18)
                         .transition(.opacity.combined(with: .scale(scale: 0.9)))
                 case .transcribing:
                     PulseDots()
                         .transition(.opacity)
                 case .done:
                     Image(systemName: "checkmark")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(.primary.opacity(0.85))
                         .transition(.scale(scale: 0.6).combined(with: .opacity))
                 case .copied:
                     Image(systemName: "doc.on.clipboard")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.primary.opacity(0.8))
                         .transition(.scale(scale: 0.7).combined(with: .opacity))
                 case .failed:
                     Image(systemName: "exclamationmark")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(.primary.opacity(0.75))
                         .transition(.scale(scale: 0.7).combined(with: .opacity))
                 case .idle:
@@ -132,10 +132,10 @@ struct HUDView: View {
                 }
             }
         }
-        .frame(width: 168, height: 46)
-        .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.18), radius: 10, y: 4)
-        .padding(12)
-        .frame(width: 192, height: 70)
+        .frame(width: 124, height: 36)
+        .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.18), radius: 8, y: 3)
+        .padding(10)
+        .frame(width: 144, height: 56)
         .animation(.spring(response: 0.34, dampingFraction: 0.78), value: stateKey)
         .preferredColorScheme(model.settings.theme.colorScheme)
     }
@@ -188,11 +188,11 @@ private struct Waveform: View {
     let levels: [Float]
 
     var body: some View {
-        HStack(alignment: .center, spacing: 2) {
+        HStack(alignment: .center, spacing: 1.9) {
             ForEach(Array(levels.enumerated()), id: \.offset) { _, level in
                 Capsule()
                     .fill(Color.primary.opacity(0.82))
-                    .frame(width: 2, height: max(2.5, CGFloat(level) * 22))
+                    .frame(width: 1.8, height: max(2, CGFloat(level) * 17))
             }
         }
         .animation(.linear(duration: 0.09), value: levels)
@@ -203,11 +203,11 @@ private struct PulseDots: View {
     @State private var active = 0
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 3) {
             ForEach(0..<3, id: \.self) { index in
                 Circle()
                     .fill(Color.primary.opacity(0.75))
-                    .frame(width: 4, height: 4)
+                    .frame(width: 3.2, height: 3.2)
                     .opacity(active == index ? 1 : 0.25)
                     .scaleEffect(active == index ? 1.15 : 1)
             }
