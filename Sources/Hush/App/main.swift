@@ -5,6 +5,16 @@ if CommandLine.arguments.contains("--selftest") {
     exit(0)
 }
 
+if let flagIndex = CommandLine.arguments.firstIndex(of: "--play-sound"),
+   CommandLine.arguments.count > flagIndex + 1 {
+    MainActor.assumeIsolated {
+        let sound = FeedbackSound(rawValue: CommandLine.arguments[flagIndex + 1]) ?? .chime
+        FeedbackSoundPlayer.shared.play(sound)
+        RunLoop.main.run(until: Date().addingTimeInterval(1.2))
+        exit(0)
+    }
+}
+
 if let flagIndex = CommandLine.arguments.firstIndex(of: "--transcribe"),
    CommandLine.arguments.count > flagIndex + 1 {
     let path = CommandLine.arguments[flagIndex + 1]

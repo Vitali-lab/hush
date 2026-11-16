@@ -349,7 +349,11 @@ final class AppModel: ObservableObject {
 
     private func playFeedback(starting: Bool) {
         guard settings.playFeedbackSound else { return }
-        NSSound(named: starting ? "Tink" : "Pop")?.play()
+        if starting {
+            FeedbackSoundPlayer.shared.play(settings.feedbackSound)
+        } else {
+            FeedbackSoundPlayer.shared.play(.tick, volume: 0.10)
+        }
     }
 
     // MARK: - Models

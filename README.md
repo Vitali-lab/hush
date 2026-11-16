@@ -26,7 +26,7 @@ Hush.app · ~8 MB · macOS 14+ · Apple Silicon (Intel builds from source)
 - **Five themes** — System, Daylight, Sand, Graphite, Midnight. Two light, two
   dark, one follows macOS.
 - **Small quality-of-life bits** — custom words, snippets, filler-word cleanup,
-  optional sound feedback, searchable history, launch at login.
+  four selectable start sounds, searchable history, launch at login.
 - **Quiet by design** — menu-bar only, no Dock icon, no background daemons.
 
 ## Deliberately not here
@@ -140,6 +140,10 @@ menu-bar popover) changes both the interface and the recognition language.
 
 - **English** — Whisper decodes only English.
 - **Русский** — Whisper decodes only Russian. The entire interface is translated.
+
+Sound feedback is in **Settings → General → Behavior**. Pick a start sound
+(Chime, Bloom, Pluck, Tick) and it plays immediately as a preview. The stop cue
+is a soft tick, and the whole thing can be switched off.
 
 Themes are in **Settings → General → Theme**:
 

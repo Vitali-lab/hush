@@ -74,6 +74,7 @@ enum SelfTest {
         var roundTrip = AppSettings()
         roundTrip.language = .en
         roundTrip.theme = .sand
+        roundTrip.feedbackSound = .pluck
         roundTrip.hotkey = HotkeyBinding(keyCode: 49, modifiers: [.control, .option], mode: .toggle, character: " ")
         if let data = try? JSONEncoder().encode(roundTrip),
            let decoded = try? JSONDecoder().decode(AppSettings.self, from: data) {

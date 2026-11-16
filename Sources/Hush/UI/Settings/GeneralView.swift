@@ -221,11 +221,15 @@ struct GeneralView: View {
             ToggleRow(
                 title: t("Sound feedback", "Звуковой отклик"),
                 subtitle: t(
-                    "A soft tick when recording starts and stops.",
-                    "Мягкий щелчок в начале и конце записи."
+                    "A short cue when recording starts and stops.",
+                    "Короткий звук в начале и конце записи."
                 ),
                 isOn: $model.settings.playFeedbackSound
             )
+
+            if model.settings.playFeedbackSound {
+                SoundPicker(model: model)
+            }
 
             Divider().opacity(0.5)
 
@@ -238,6 +242,57 @@ struct GeneralView: View {
                 isOn: $model.settings.launchAtLogin
             )
         }
+    }
+}
+
+// MARK: - Sound
+
+private struct SoundPicker: View {
+    @ObservedObject var model: AppModel
+
+    private var t: Loc { Loc(model.settings.language) }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(t("Start sound", "Звук старта"))
+                .font(.system(size: 11.5))
+                .foregroundStyle(.secondary)
+
+            Spacer(minLength: 6)
+
+            ForEach(FeedbackSound.allCases) { sound in
+                Button {
+                    model.settings.feedbackSound = sound
+                    FeedbackSoundPlayer.shared.play(sound)
+                } label: {
+                    Text(sound.name(model.settings.language))
+                        .font(.system(size: 10.5, weight: .medium))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule().fill(
+                                model.settings.feedbackSound == sound
+                                    ? Theme.accent.opacity(0.14)
+                                    : Color.primary.opacity(0.04)
+                            )
+                        )
+                        .overlay(
+                            Capsule().strokeBorder(
+                                model.settings.feedbackSound == sound
+                                    ? Theme.accent.opacity(0.45)
+                                    : Color.clear,
+                                lineWidth: 1
+                            )
+                        )
+                        .foregroundStyle(model.settings.feedbackSound == sound ? Theme.accent : .secondary)
+                }
+                .buttonStyle(.plain)
+                .help(sound.detail(model.settings.language))
+            }
+        }
+        .padding(.leading, 2)
+        .padding(.top, 2)
+        .animation(.easeOut(duration: 0.15), value: model.settings.feedbackSound)
     }
 }
 

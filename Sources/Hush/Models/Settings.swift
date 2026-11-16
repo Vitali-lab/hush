@@ -20,6 +20,7 @@ struct AppSettings: Codable, Equatable {
     var autoPaste: Bool = true
     var removeFillers: Bool = true
     var playFeedbackSound: Bool = false
+    var feedbackSound: FeedbackSound = .chime
     var launchAtLogin: Bool = false
     var maxSeconds: Double = 180
     var dictionary: [DictionaryEntry] = []
@@ -58,6 +59,7 @@ struct AppSettings: Codable, Equatable {
         autoPaste = try container.decodeIfPresent(Bool.self, forKey: .autoPaste) ?? true
         removeFillers = try container.decodeIfPresent(Bool.self, forKey: .removeFillers) ?? true
         playFeedbackSound = try container.decodeIfPresent(Bool.self, forKey: .playFeedbackSound) ?? false
+        feedbackSound = try container.decodeIfPresent(FeedbackSound.self, forKey: .feedbackSound) ?? .chime
         launchAtLogin = try container.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? false
         maxSeconds = try container.decodeIfPresent(Double.self, forKey: .maxSeconds) ?? 180
         dictionary = try container.decodeIfPresent([DictionaryEntry].self, forKey: .dictionary) ?? []

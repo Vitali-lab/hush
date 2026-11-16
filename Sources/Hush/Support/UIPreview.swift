@@ -48,6 +48,10 @@ enum UIPreview {
         render(SettingsRootView(model: model, initialTab: .dictionary), size: settingsSize, name: "settings-words-ru", in: directory)
         render(SettingsRootView(model: model, initialTab: .about), size: settingsSize, name: "settings-about-ru", in: directory)
 
+        model.settings.playFeedbackSound = true
+        render(SettingsRootView(model: model), size: settingsSize, name: "settings-sound-ru", in: directory)
+        model.settings.playFeedbackSound = false
+
         model.settings = original
         model.settings.theme = .system
         model.settings.language = .en
