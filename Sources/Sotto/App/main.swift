@@ -1,0 +1,37 @@
+import AppKit
+
+if CommandLine.arguments.contains("--selftest") {
+    SelfTest.run()
+    exit(0)
+}
+
+if let flagIndex = CommandLine.arguments.firstIndex(of: "--transcribe"),
+   CommandLine.arguments.count > flagIndex + 1 {
+    let path = CommandLine.arguments[flagIndex + 1]
+    Task.detached {
+        do {
+            let text = try await TranscribeCLI.run(audioPath: path)
+            print(text)
+            exit(0)
+        } catch {
+            FileHandle.standardError.write(Data("error: \(error.localizedDescription)\n".utf8))
+            exit(1)
+        }
+    }
+    dispatchMain()
+}
+
+MainActor.assumeIsolated {
+    let application = NSApplication.shared
+    let appDelegate = AppDelegate()
+    application.delegate = appDelegate
+    application.setActivationPolicy(.accessory)
+
+    if let flagIndex = CommandLine.arguments.firstIndex(of: "--render-ui"),
+       CommandLine.arguments.count > flagIndex + 1 {
+        UIPreview.renderAll(to: CommandLine.arguments[flagIndex + 1])
+        exit(0)
+    }
+
+    application.run()
+}
