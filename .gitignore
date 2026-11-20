@@ -6,3 +6,4 @@ dist/
 .swiftpm/
 DerivedData/
 .env
+.superpowers/
