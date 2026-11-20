@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 — 2026-11-20
+
+- The floating pill is a solid black capsule in dark themes and a solid white
+  capsule in light themes, with no gradient.
+- The waveform and status icons are pure monochrome to match.
+
 ## 1.2.0 — 2026-11-20
 
 - Minimal 124×36 floating pill with a live waveform and no timer.
