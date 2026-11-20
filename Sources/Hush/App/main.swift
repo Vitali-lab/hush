@@ -39,7 +39,7 @@ MainActor.assumeIsolated {
         if let other = NSRunningApplication
             .runningApplications(withBundleIdentifier: bundleID)
             .first(where: { $0.processIdentifier != currentPID }) {
-            other.activate(options: [.activateIgnoringOtherApps])
+            other.activate(options: [])
             exit(0)
         }
     }

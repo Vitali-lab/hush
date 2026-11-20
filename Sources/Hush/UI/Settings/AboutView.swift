@@ -32,8 +32,8 @@ struct AboutView: View {
                 }
 
                 Text(t(
-                    "Hush is a local-first take on Wispr Flow: a global shortcut, a tiny floating pill, and your words at the cursor. Audio is recorded in memory and never uploaded.",
-                    "Hush — локальная альтернатива Wispr Flow: глобальный хоткей, маленькая плавающая пилюля и твои слова у курсора. Аудио живёт в памяти и никуда не отправляется."
+                    "Hush turns speech into text on this Mac. A global shortcut, a tiny floating pill, and your words at the cursor. Audio stays in memory and is never uploaded.",
+                    "Hush превращает речь в текст на этом Mac. Глобальный хоткей, маленькая плавающая пилюля и твои слова у курсора. Аудио остаётся в памяти и никуда не отправляется."
                 ))
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)

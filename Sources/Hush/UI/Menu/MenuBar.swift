@@ -105,7 +105,7 @@ final class MenuBarController: NSObject, NSPopoverDelegate {
         popover.performClose(nil)
 
         if let previousApp, previousApp.bundleIdentifier != Bundle.main.bundleIdentifier {
-            previousApp.activate(options: [.activateIgnoringOtherApps])
+            previousApp.activate(options: [])
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
