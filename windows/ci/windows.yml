@@ -1,0 +1,78 @@
+name: Windows build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+    paths:
+      - "windows/**"
+      - ".github/workflows/windows.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Core logic tests
+        run: dotnet run --project windows/tests/Hush.Core.Tests/Hush.Core.Tests.csproj -c Release
+
+      - name: Publish self-contained app
+        run: >
+          dotnet publish windows/src/Hush.Windows/Hush.Windows.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -o publish
+
+      - name: Strip debug symbols
+        shell: pwsh
+        run: Get-ChildItem publish -Filter *.pdb -Recurse | Remove-Item -Force
+
+      - name: Add install notes
+        shell: pwsh
+        run: |
+          @"
+          Hush for Windows — beta
+          =======================
+
+          1. Extract this folder anywhere.
+          2. Run Hush.exe.
+          3. Allow microphone access in Windows Settings if asked.
+          4. Open the Model tab and download the speech model once (about 574 MB).
+          5. Press Right Alt (or Ctrl+Alt+Space) and speak.
+
+          Requirements: Windows 11 x64, a CPU with AVX2.
+          The app is unsigned, so Windows SmartScreen may warn.
+          Model files live in %APPDATA%\Hush\models.
+
+          If Whisper fails to load, install the Microsoft Visual C++ 2015-2022
+          Redistributable (x64) and restart Hush.
+
+          https://github.com/Vitali-lab/hush
+          "@ | Out-File -Encoding utf8 publish\README.txt
+
+      - name: Zip portable build
+        run: Compress-Archive -Path publish\* -DestinationPath Hush-Windows-x64.zip -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Hush-Windows-x64
+          path: Hush-Windows-x64.zip
+          retention-days: 30
+
+      - name: Upload to the matching GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload $env:GITHUB_REF_NAME Hush-Windows-x64.zip --clobber

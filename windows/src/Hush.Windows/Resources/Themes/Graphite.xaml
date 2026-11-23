@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="AppBg" Color="#14161B"/>
+    <SolidColorBrush x:Key="SidebarBg" Color="#1B1E25"/>
+    <SolidColorBrush x:Key="CardBg" Color="#1F232B"/>
+    <SolidColorBrush x:Key="CardBorder" Color="#2C313B"/>
+    <SolidColorBrush x:Key="TextPrimary" Color="#EDF0F5"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#9AA3B2"/>
+    <SolidColorBrush x:Key="Accent" Color="#6E8BFF"/>
+    <SolidColorBrush x:Key="AccentBright" Color="#9FB4FF"/>
+    <SolidColorBrush x:Key="Pink" Color="#C86DD7"/>
+    <SolidColorBrush x:Key="Green" Color="#37C77F"/>
+    <SolidColorBrush x:Key="Amber" Color="#F0A13A"/>
+    <SolidColorBrush x:Key="Danger" Color="#FF5C5C"/>
+    <SolidColorBrush x:Key="InputBg" Color="#242933"/>
+    <SolidColorBrush x:Key="InputBorder" Color="#333A46"/>
+    <SolidColorBrush x:Key="HoverBg" Color="#272C36"/>
+    <SolidColorBrush x:Key="SelectedBg" Color="#2A3350"/>
+    <SolidColorBrush x:Key="Divider" Color="#2A2F39"/>
+    <SolidColorBrush x:Key="PillBg" Color="#000000"/>
+    <SolidColorBrush x:Key="PillFg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PillBorder" Color="#5A5A5A"/>
+    <SolidColorBrush x:Key="ButtonText" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="WindowBorder" Color="#2C313B"/>
+</ResourceDictionary>

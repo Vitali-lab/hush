@@ -7,3 +7,10 @@ dist/
 DerivedData/
 .env
 .superpowers/
+
+# .NET / Windows build artifacts
+**/bin/
+**/obj/
+windows/publish/
+dist/
+Hush-Windows-x64.zip

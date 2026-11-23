@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Hush.Core/Hush.Core.csproj" />
+    <Project Path="src/Hush.Windows/Hush.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Hush.Core.Tests/Hush.Core.Tests.csproj" />
+  </Folder>
+</Solution>

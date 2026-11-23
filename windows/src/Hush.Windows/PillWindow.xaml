@@ -1,0 +1,54 @@
+<Window x:Class="Hush.Windows.PillWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Hush.Windows.Controls"
+        Width="144" Height="56"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        Focusable="False"
+        WindowStartupLocation="Manual"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI">
+    <Grid Background="Transparent" IsHitTestVisible="False">
+        <Border Width="124" Height="36"
+                CornerRadius="18"
+                Background="{DynamicResource PillBg}"
+                BorderBrush="{DynamicResource PillBorder}"
+                BorderThickness="1.2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <Grid>
+                <controls:WaveformControl x:Name="Waveform"
+                                          Width="92" Height="18"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          BarBrush="{DynamicResource PillFg}"
+                                          Visibility="Collapsed"/>
+
+                <StackPanel x:Name="Dots"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed">
+                    <Ellipse Width="3.2" Height="3.2" Margin="1.5,0" Fill="{DynamicResource PillFg}"/>
+                    <Ellipse Width="3.2" Height="3.2" Margin="1.5,0" Fill="{DynamicResource PillFg}"/>
+                    <Ellipse Width="3.2" Height="3.2" Margin="1.5,0" Fill="{DynamicResource PillFg}"/>
+                </StackPanel>
+
+                <TextBlock x:Name="StatusIcon"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontFamily="Segoe MDL2 Assets"
+                           FontSize="13"
+                           Foreground="{DynamicResource PillFg}"
+                           Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

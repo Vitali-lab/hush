@@ -16,7 +16,8 @@ macOS 14+ · Apple Silicon · ~8 MB plus a one-time 632 MB model
 | File | Link |
 | --- | --- |
 | Installer (DMG) | [Hush-macOS-arm64.dmg](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.dmg) |
-| Zip archive | [Hush-macOS-arm64.zip](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.zip) |
+| macOS zip | [Hush-macOS-arm64.zip](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.zip) |
+| Windows beta (x64) | [Hush-Windows-x64.zip](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-Windows-x64.zip) |
 | Checksums | [SHA256SUMS.txt](https://github.com/Vitali-lab/hush/releases/latest/download/SHA256SUMS.txt) |
 
 Hush is signed with a development certificate and is **not notarized yet**. On
@@ -144,12 +145,12 @@ cd hush
 open dist/Hush.app
 ```
 
-See [DEVELOPMENT.md](DEVELOPMENT.md) for the project layout, development flags,
-and porting notes.
+See [DEVELOPMENT.md](DEVELOPMENT.md) for the project layout and development
+flags, and [windows/README.md](windows/README.md) for the Windows build.
 
 ## Platforms
 
-macOS 14+ on Apple Silicon. Windows and Linux are not supported yet.
+macOS 14+ on Apple Silicon, and Windows 11 x64 as a beta. Linux is not supported yet.
 
 ## Credits
 

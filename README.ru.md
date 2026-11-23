@@ -16,7 +16,8 @@ macOS 14+ · Apple Silicon · ~8 МБ плюс модель 632 МБ при пе
 | Файл | Ссылка |
 | --- | --- |
 | Установщик (DMG) | [Hush-macOS-arm64.dmg](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.dmg) |
-| Zip-архив | [Hush-macOS-arm64.zip](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.zip) |
+| macOS zip | [Hush-macOS-arm64.zip](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.zip) |
+| Windows beta (x64) | [Hush-Windows-x64.zip](https://github.com/Vitali-lab/hush/releases/latest/download/Hush-Windows-x64.zip) |
 | Контрольные суммы | [SHA256SUMS.txt](https://github.com/Vitali-lab/hush/releases/latest/download/SHA256SUMS.txt) |
 
 Hush подписан сертификатом разработчика, но **пока не нотаризован**. При первом
@@ -144,12 +145,12 @@ cd hush
 open dist/Hush.app
 ```
 
-Структура проекта, флаги разработки и заметки о портировании — в
-[DEVELOPMENT.md](DEVELOPMENT.md).
+Структура проекта и флаги разработки — в [DEVELOPMENT.md](DEVELOPMENT.md),
+сборка для Windows — в [windows/README.md](windows/README.md).
 
 ## Платформы
 
-macOS 14+ на Apple Silicon. Windows и Linux пока не поддерживаются.
+macOS 14+ на Apple Silicon и Windows 11 x64 в статусе беты. Linux пока не поддерживается.
 
 ## Благодарности
 

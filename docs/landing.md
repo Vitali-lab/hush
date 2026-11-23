@@ -21,7 +21,10 @@ words appear at the cursor in any app. No account, no cloud, no telemetry.
 
 **Download for macOS** → https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.dmg
 
-*macOS 14+ · Apple Silicon · 632 MB model downloads once*
+**Windows beta** → https://github.com/Vitali-lab/hush/releases/latest/download/Hush-Windows-x64.zip
+
+*macOS 14+ · Apple Silicon · 632 MB model downloads once*  
+*Windows 11 x64 · beta · the model is downloaded from inside the app*
 
 ### Features
 
@@ -95,7 +98,10 @@ shortcut and to paste text into other apps.
 
 **Скачать для macOS** → https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.dmg
 
-*macOS 14+ · Apple Silicon · модель 632 МБ скачивается один раз*
+**Windows beta** → https://github.com/Vitali-lab/hush/releases/latest/download/Hush-Windows-x64.zip
+
+*macOS 14+ · Apple Silicon · модель 632 МБ скачивается один раз*  
+*Windows 11 x64 · бета · модель скачивается из приложения*
 
 ### Возможности
 
@@ -159,5 +165,6 @@ Intel нет.
 ## Assets
 
 - App icon (1024×1024): [`docs/icon-1024.png`](icon-1024.png)
-- Direct download: `https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.dmg`
+- Direct macOS download: `https://github.com/Vitali-lab/hush/releases/latest/download/Hush-macOS-arm64.dmg`
+- Direct Windows beta download: `https://github.com/Vitali-lab/hush/releases/latest/download/Hush-Windows-x64.zip`
 - Repository: https://github.com/Vitali-lab/hush
