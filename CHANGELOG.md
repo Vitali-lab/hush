@@ -1,10 +1,12 @@
 # Changelog
 
-## 1.2.1 — 2026-11-20
+## 1.2.1 — 2026-11-23
 
 - The floating pill is a solid black capsule in dark themes and a solid white
   capsule in light themes, with no gradient.
 - The waveform and status icons are pure monochrome to match.
+- Added the first Windows 11 beta: a native WPF app with local whisper.cpp
+  inference, the same shortcut/model/settings model, and a portable build.
 
 ## 1.2.0 — 2026-11-20
 
